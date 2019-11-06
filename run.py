@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# only options 1 and 4 are configured as of now
+
 import vymgmt
 
 def main():
@@ -34,8 +36,7 @@ def main():
             vyos.exit()
             vyos.logout()
             print("\t\t> Success! Exiting now..")
-        if choice == "4":
-            print("")
+        if choice == "4": print("")
             print("> Begin by connecting to the router.. ")
             print("")
             router = input("\t> Enter the routers IP address:\t")
