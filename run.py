@@ -14,6 +14,7 @@ def main():
         print ("\t3) - create DNS entry for static hosts") 
         print ("\t4) - setup AirVPN client")
         print ("\t5) - setup ProtonVPN client")
+        print ("\t6) - test case")
         choice = input("select a choice: ")
         if choice == "1":
             print("")
@@ -36,7 +37,8 @@ def main():
             vyos.exit()
             vyos.logout()
             print("\t\t> Success! Exiting now..")
-        if choice == "4": print("")
+        if choice == "4":
+            print("")
             print("> Begin by connecting to the router.. ")
             print("")
             router = input("\t> Enter the routers IP address:\t")
@@ -82,6 +84,29 @@ def main():
 
             vyos.commit()
             vyos.save()
+            vyos.exit()
+            vyos.logout()
+            print("\t\t> Success! Exiting now..")
+        if choice == "6":
+            print("")
+            print("> Begin by connecting to the router.. ")
+            print("")
+            router = "192.168.10.1"
+            user = "gtfo"
+            passwd = "n0a110w"
+#            router = input("\t> Enter the routers IP address:\t")
+#            user = input("\t> Enter the username:\t\t")
+#            passwd = input("\t> Enter the password:\t\t")
+            vyos = vymgmt.Router(router, user, password=passwd, port=2727)
+            vyos.login()
+#            vyos.configure() 
+            print("")
+            input("\t---> Connected! Press Enter to continue..")
+            cmd = "show interfaces"
+            vyos.run_op_mode_command(cmd)
+            
+#            vyos.commit()
+#            vyos.save()
             vyos.exit()
             vyos.logout()
             print("\t\t> Success! Exiting now..")
