@@ -3,6 +3,7 @@
 # only options 1 and 4 are configured as of now
 
 import vymgmt
+port=2727
 
 def main():
     choice = "0"
@@ -22,8 +23,7 @@ def main():
             print("")
             router = input("\t> Enter the routers IP address:\t")
             user = input("\t> Enter the username:\t\t")
-            passwd = input("\t> Enter the password:\t\t")
-            vyos = vymgmt.Router(router, user, password=passwd, port=2727)
+            vyos = vymgmt.Router(router, user, port=port) 
             vyos.login()
             vyos.configure() 
             print("")
@@ -37,20 +37,40 @@ def main():
             vyos.exit()
             vyos.logout()
             print("\t\t> Success! Exiting now..")
+        if choice == "3":
+            print("")
+            print("> Begin by connecting to the router.. ")
+            print("")
+            router = input("\t> Enter the routers IP address:\t")
+            user = input("\t> Enter the username:\t\t")
+            vyos = vymgmt.Router(router, user, port=port) 
+            vyos.login()
+            vyos.configure() 
+            print("")
+            input("\t---> Connected! Press Enter to continue..")
+            ip = input("\t\t> Enter static IP of host:\t")
+            hostname = input("\t\t> Enter a new hostname:\t")
+            cmd = "system static-host-mapping host-name " + hostname + " inet " + ip
+            vyos.set(cmd)
+            
+            vyos.commit()
+            vyos.save()
+            vyos.exit()
+            vyos.logout()
+            print("\t\t> Success! Exiting now..")
         if choice == "4":
             print("")
             print("> Begin by connecting to the router.. ")
             print("")
             router = input("\t> Enter the routers IP address:\t")
             user = input("\t> Enter the username:\t\t")
-            passwd = input("\t> Enter the password:\t\t")
-            vyos = vymgmt.Router(router, user, password=passwd, port=2727)
+            vyos = vymgmt.Router(router, user, port=2727)
             vyos.login()
             vyos.configure() 
             print("")
             input("\t---> Connected! Press Enter to continue..")
-            source_address = input("\t\t> Enter a source address (vpn client) in CIDR:\t")
-            rule = input("\t\t> Enter a new rule # (greater than 5005):\t")
+            source_address = input("\t\t> Enter the source address (vpn client) (i.e. 192.168.10.20/32):\t")
+            rule = input("\t\t> Enter a new rule # (>5000):\t")
             description = input("\t\t> Enter a SHORT description \n\t\t(surrounded by single quotes)\t")
             cmd1 = "service nat rule " + rule + " description " + description
             vyos.set(cmd1)
@@ -71,7 +91,7 @@ def main():
             vyos.set(cmd6)
 #            print (cmd6)
              
-            rule = input("\t\t> Enter a new firewall rule # (no greater than 50): ")
+            rule = input("\t\t> Enter a new firewall rule # (<50): ")
             cmd7 = "firewall modify OPENVPN_ROUTE rule " + rule + " description " + description
             vyos.set(cmd7)
 #            print(cmd7)
@@ -91,22 +111,17 @@ def main():
             print("")
             print("> Begin by connecting to the router.. ")
             print("")
-            router = "192.168.10.1"
-            user = "gtfo"
-            passwd = "n0a110w"
-#            router = input("\t> Enter the routers IP address:\t")
-#            user = input("\t> Enter the username:\t\t")
-#            passwd = input("\t> Enter the password:\t\t")
-            vyos = vymgmt.Router(router, user, password=passwd, port=2727)
+            router = input("\t> Enter the routers IP address:\t")
+            user = input("\t> Enter the username:\t\t")
+            vyos = vymgmt.Router(router, user, port=2727)
             vyos.login()
-#            vyos.configure() 
+            vyos.configure() 
             print("")
             input("\t---> Connected! Press Enter to continue..")
-            cmd = "show interfaces"
-            vyos.run_op_mode_command(cmd)
-            
-#            vyos.commit()
-#            vyos.save()
+            result = vyos.run_conf_mode_command(" show service nat rule | grep -i airvpn | cut -b18-")
+            print("")
+            print(result)
+            print("")
             vyos.exit()
             vyos.logout()
             print("\t\t> Success! Exiting now..")
